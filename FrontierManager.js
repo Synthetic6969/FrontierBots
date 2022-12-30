@@ -77,4 +77,5 @@ client.on('interactionCreate', async interaction => {
     }
 })
 
+console.log(process.env.COMMUNITY_MANAGER_TOKEN);
 client.login(process.env.COMMUNITY_MANAGER_TOKEN);
