@@ -1,0 +1,19 @@
+{
+  "name": "frontiermanager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "FrontierManager.js",
+  "scripts": {
+    "start": "node FrontierManager.js"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "discord.js": "^13.3.1",
+    "dotenv": "^10.0.0"
+  },
+  "engines": {
+    "node": "16.13.0"
+  },
+  "author": "Synthetic",
+  "license": "ISC"
+}
