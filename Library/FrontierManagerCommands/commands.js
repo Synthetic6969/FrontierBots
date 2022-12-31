@@ -7,4 +7,5 @@ module.exports = {
     ban             : require('./gameBan'),
     unban           : require('./unGameBan'),
     warn            : require('./warn'),
+    verify          : require('./verify'),
 }

@@ -3,8 +3,8 @@ const Discord = require('discord.js');
 const RobloxHelper = require('./RobloxHelper');
 
 const promptEmbed = (description, includeQuestionMark) => {
-    return new Discord.MessageEmbed()
-        .setColor("BLUE")
+    return new Discord.EmbedBuilder()
+        .setColor("Blue")
         .setTitle("Prompt")
         .setDescription((includeQuestionMark ? "❓ " : "") + description)
         .setFooter("This prompt will cancel after 200 seconds.")
@@ -12,24 +12,24 @@ const promptEmbed = (description, includeQuestionMark) => {
 }
 
 const successEmbed = (title, description) => {
-    return new Discord.MessageEmbed()
-        .setColor("GREEN")
+    return new Discord.EmbedBuilder()
+        .setColor("Green")
         .setTitle(title)
         .setDescription(`✅ ${description}`)
         .setTimestamp()
 }
 
 const failureEmbed = (title, description) => {
-    return new Discord.MessageEmbed()
-        .setColor("RED")
+    return new Discord.EmbedBuilder()
+        .setColor("Red")
         .setTitle(title)
         .setDescription(`❌ ${description}`)
         .setTimestamp()
 }
 
 const loadingEmbed = (title, description) => {
-    return new Discord.MessageEmbed()
-        .setColor("GREY")
+    return new Discord.EmbedBuilder()
+        .setColor("Grey")
         .setTitle(title)
         .setDescription(`🦧 ${description}`)
         .setTimestamp()
@@ -42,12 +42,12 @@ const logCommand = async (guild, cmd, cmdType, authorUsername, args, reason, fil
     }
     fields.push({ 'name' : 'Reason', 'value' : `> ${reason}`})
     const colour = {
-        Utility : 'GREY',
-        Reimbursement : 'GREEN',
-        Moderation : 'YELLOW',
-        Administration : 'RED'
+        Utility : 'Grey',
+        Reimbursement : 'Green',
+        Moderation : 'Yellow',
+        Administration : 'Red'
     }[cmdType]
-    await (await guild.channels.cache.get('914515512568983563')).send({embeds : [new Discord.MessageEmbed()
+    await (await guild.channels.cache.get('914515512568983563')).send({embeds : [new Discord.EmbedBuilder()
         .setColor(colour)
         .setTitle(`${cmd} was used`)
         .addFields(fields)
@@ -72,4 +72,14 @@ const authenticate = async (userId, permissionLevel) => {
     }
 }
 
-module.exports = { loadingEmbed, failureEmbed, successEmbed, promptEmbed, logCommand, getMemberFromMention, authenticate };
+const getRoleIdFromName = ((guild, name) => {
+    let id = 0
+    guild.roles.cache.forEach((role, roleId) => {
+        if (role.name == name) {
+            id = roleId
+        }
+    });
+    return id;
+})
+
+module.exports = { loadingEmbed, failureEmbed, successEmbed, promptEmbed, logCommand, getMemberFromMention, authenticate, getRoleIdFromName };

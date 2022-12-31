@@ -10,25 +10,25 @@ module.exports = {
             {
                 name : 'username',
                 description : 'Target username.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.STRING,
+                type : 3,
                 required : true
             },
             {
                 name : 'role',
                 description : 'The role you want to set bank space on.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.STRING,
+                type : 3,
                 required : true
             },
             {
                 name : 'amount',
                 description : 'Amount of bank space to set.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.INTEGER,
+                type : 4,
                 required : true
             },
             {
                 name : 'reason',
                 description : 'Reason of giving the item.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.STRING,
+                type : 3,
                 required : true
             }
         ]

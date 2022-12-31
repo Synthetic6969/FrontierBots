@@ -1,5 +1,6 @@
 require('dotenv').config();
 const axios = require('axios').default;
+const Member = require('../Models/Member.js');
 
 const getUserIdFromName = async name => {
     const response = (await axios.request({
@@ -18,12 +19,24 @@ const getUsernameFromUserId = async userId => {
 }
 
 const getUserIdFromDiscordId = async discordId => {
-    const response = await axios.default.get(`https://api.blox.link/v1/user/${discordId}`)
-    if (response.data.status == 'ok' && response.data.primaryAccount) {
-        return response.data.primaryAccount;
-    } else {
-        new Error('User is not verified with Bloxlink');
+    const memberInfo = await Member.findOne({ discord_id: discordId })
+    return memberInfo?.roblox_id
+}
+
+const getToken = async () => {
+    let token
+    try {
+        await axios.request({
+            method: 'POST',
+            url: 'https://auth.roblox.com/v2/logout',
+            headers: {
+                'Cookie' : `.ROBLOSECURITY=${process.env.ROBLOX_COOKIE}`,
+            },
+        })
+    } catch (err) {
+        token = err.response.headers['x-csrf-token']
     }
+    return token
 }
 
 const getRankInGroup = async (userId, groupId) => {
@@ -34,6 +47,28 @@ const getRankInGroup = async (userId, groupId) => {
         }
     }
     return 0
+}
+
+const setRank = async (userId, groupId, rankName) => {
+    const groupData = (await axios.get(`https://groups.roblox.com/v1/groups/${groupId}/roles`)).data
+    let roleId
+    for (const role of groupData.roles) {
+        if (rankName == role.name) {
+            roleId = role.id
+        }
+    }
+    if (!roleId) return;
+    await axios.request({
+        method: 'PATCH',
+        url: `https://groups.roblox.com/v1/groups/${groupId}/users/${userId}`,
+        headers: {
+            'Cookie' : `.ROBLOSECURITY=${process.env.ROBLOX_COOKIE}`,
+            'X-CSRF-TOKEN': await getToken()
+        },
+        data: {
+            'roleId': roleId
+        }
+    })
 }
 
 const getAsync = async (name, scope, key) => {
@@ -116,6 +151,14 @@ const getPlayerData = async (username) => {
     return playerData
 }
 
+const getRobloxStatus = async userId => {
+    const response = (await axios.request({
+        method: 'GET',
+        url: `https://users.roblox.com/v1/users/${userId}`
+    })).data.description || ''
+    return response
+}
+
 module.exports = {
     getUserIdFromName,
     getUserIdFromDiscordId,
@@ -123,5 +166,8 @@ module.exports = {
     setAsync,
     getPlayerData,
     getRankInGroup,
-    getUsernameFromUserId
+    getUsernameFromUserId,
+    getRobloxStatus,
+    setRank,
+    getToken,
 };

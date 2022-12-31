@@ -10,19 +10,19 @@ module.exports = {
             {
                 name : 'username',
                 description : 'Target username.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.STRING,
+                type : 3,
                 required : true
             },
             {
                 name : 'reason',
                 description : 'Reason for ban.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.STRING,
+                type : 3,
                 required : true
             },
             {
                 name : 'time',
                 description : 'Number of hours for ban.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.INTEGER,
+                type : 4,
                 required : false
             }
         ]

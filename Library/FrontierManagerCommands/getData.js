@@ -10,13 +10,13 @@ module.exports = {
             {
                 name : 'username',
                 description : 'Target username.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.STRING,
+                type : 3,
                 required : true
             },
             {
                 name : 'role',
                 description : 'Specify the role you would like to check data for.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.STRING,
+                type : 3,
                 required : false
             }
         ]
@@ -57,11 +57,11 @@ module.exports = {
         // Success
         interaction.editReply({embeds : [DiscordHelper.successEmbed('Success', `There are no issues with your request.`)], ephemeral : true});
 
-        let embeds = [new Discord.MessageEmbed().setTitle(`${username} Data`)]
+        let embeds = [new Discord.EmbedBuilder().setTitle(`${username} Data`)]
         for (const role of ['Colonist', 'Native', 'Hudson\'s Bay Company']) {
             if (roleChosen && roleChosen != role) continue;
             embeds.push(
-                new Discord.MessageEmbed()
+                new Discord.EmbedBuilder()
                     .setTitle(`${username} ${role}`)
                     .addFields(
                         {

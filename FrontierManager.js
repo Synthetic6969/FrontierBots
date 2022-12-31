@@ -1,7 +1,7 @@
 require('dotenv').config();
 const Discord = require('discord.js');
 const client = new Discord.Client({
-    intents : new Discord.Intents(32767),
+    intents : 32767,
     presence : {
         'activities' : [{
             name : 'FRONTIER',

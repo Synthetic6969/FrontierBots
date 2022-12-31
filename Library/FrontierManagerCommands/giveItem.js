@@ -10,25 +10,25 @@ module.exports = {
             {
                 name : 'username',
                 description : 'Target username.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.STRING,
+                type : 3,
                 required : true
             },
             {
                 name : 'role',
                 description : 'The role you want to give the item on.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.STRING,
+                type : 3,
                 required : true
             },
             {
                 name : 'item',
                 description : 'The item you want to give.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.STRING,
+                type : 3,
                 required : true
             },
             {
                 name : 'reason',
                 description : 'Reason of giving the item.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.STRING,
+                type : 3,
                 required : true
             }
         ]

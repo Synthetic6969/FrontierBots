@@ -10,19 +10,19 @@ module.exports = {
             {
                 name : 'user',
                 description : 'Discord mention of the target user.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.MENTIONABLE,
+                type : 9,
                 required : true
             },
             {
                 name : 'time',
                 description : 'Number of hours for probation (1 - 168).',
-                type : Discord.Constants.ApplicationCommandOptionTypes.INTEGER,
+                type : 4,
                 required : true
             },
             {
                 name : 'reason',
                 description : 'Reason of probation.',
-                type : Discord.Constants.ApplicationCommandOptionTypes.STRING,
+                type : 3,
                 required : true
             }
         ]
