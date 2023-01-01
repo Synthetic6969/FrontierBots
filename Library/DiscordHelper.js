@@ -7,7 +7,7 @@ const promptEmbed = (description, includeQuestionMark) => {
         .setColor("Blue")
         .setTitle("Prompt")
         .setDescription((includeQuestionMark ? "❓ " : "") + description)
-        .setFooter("This prompt will cancel after 200 seconds.")
+        .setFooter({"text": "This prompt will cancel after 200 seconds."})
         .setTimestamp()
 }
 

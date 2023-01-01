@@ -159,6 +159,10 @@ const getRobloxStatus = async userId => {
     return response
 }
 
+const getGroupRoles = async groupId => {
+    return (await axios.get(`https://groups.roblox.com/v1/groups/${groupId}/roles`)).data.roles
+}
+
 module.exports = {
     getUserIdFromName,
     getUserIdFromDiscordId,
@@ -170,4 +174,5 @@ module.exports = {
     getRobloxStatus,
     setRank,
     getToken,
+    getGroupRoles,
 };

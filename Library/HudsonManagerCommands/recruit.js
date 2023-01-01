@@ -1,6 +1,7 @@
 const Discord       = require('discord.js');
 const RobloxHelper  = require('../RobloxHelper');
 const DiscordHelper = require('../DiscordHelper');
+const garrisons = require('../../Config/garrisons')
 
 module.exports = {
     info : {
@@ -50,7 +51,6 @@ module.exports = {
         const targetUsername = await RobloxHelper.getUsernameFromUserId(targetUserId)
 
         // Get garrison and troop
-        const garrisons = require('../garrisons')
         let matches = []
         let garrison
         for (const roleName of Object.keys(garrisons.recruitment)) {
@@ -61,7 +61,7 @@ module.exports = {
 
         const setTroop = async troopInfo => {
             targetMember.setNickname(`${troopInfo.name.replace(/ /g, '')} ${targetUsername}`)
-            troopInfo.roles.push('917035227224875038') // Add frontiersman role
+            troopInfo.roles.push('1059126226847023115') // Add frontiersman role
             targetMember.roles.add(troopInfo.roles)
             targetMember.roles.remove('810249114612531200') // Remove Awaiting Placement
             RobloxHelper.setRank(targetUserId, process.env.HBC_GROUP_ID, 'Frontiersman')
@@ -78,7 +78,6 @@ module.exports = {
                     if (troopInfo == 'PRIORITY') continue;
                     options.push({
                         label: troopInfo.name,
-                        description: '',
                         value: troopInfo.name
                     })
                 }
@@ -86,20 +85,23 @@ module.exports = {
             interaction.editReply({embeds: [ DiscordHelper.promptEmbed('Which troop would you like to recruit to?', false) ], components: [
                 new Discord.ActionRowBuilder()
                     .addComponents(
-                        new Discord.MessageSelectMenu()
+                        new Discord.StringSelectMenuBuilder()
                             .setCustomId(`RECRUIT_${targetUserId}${authorUserId}`)
                             .setPlaceholder('Select a troop')
                             .setMinValues(1)
                             .setMaxValues(1)
                             .addOptions(options)
-                )
+                    )
             ], ephemeral: true})
         }
 
-        client.on('interactionCreate', dropdownInteraction => {
-            if (!dropdownInteraction.isSelectMenu()) return;
+        const dropdownCallback = dropdownInteraction => {
+            if (!dropdownInteraction.isStringSelectMenu()) return;
 
             if (dropdownInteraction.customId == `RECRUIT_${targetUserId}${authorUserId}`) {
+                // Prevent memory leaks
+                event.off('interactionCreate', dropdownCallback)
+
                 const troopInfo = garrisons.recruitment[dropdownInteraction.values[0]][0]
                 setTroop(troopInfo)
 
@@ -115,6 +117,15 @@ module.exports = {
                         .setTimestamp()
                 ]})
             }
-        })
+        }
+
+        const event = client.on('interactionCreate', dropdownCallback)
+
+        // 10 minute timeout
+        setTimeout(() => {
+            interaction.editReply({embeds : [DiscordHelper.failureEmbed('Recruitment Failed', `The request timed out.`)], ephemeral : true});
+            event.off('interactionCreate', dropdownCallback)
+            return;
+        }, 1000*10*60)
     }
 }

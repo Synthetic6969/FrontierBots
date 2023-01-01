@@ -73,10 +73,13 @@ module.exports = {
                     )
                 ], ephemeral: true})
 
-                client.on('interactionCreate', async buttonInteraction => {
+                const buttonCallback = async buttonInteraction => {
                     if (!buttonInteraction.isButton()) return;
 
                     if (buttonInteraction.customId == `VERIFY_${userId}`) {
+                        // Prevent memory leaks
+                        event.off('interactionCreate', buttonCallback)
+
                         // Check status
                         buttonInteraction.deferUpdate()
 
@@ -90,21 +93,30 @@ module.exports = {
                             MemberInfo.save(err => {
                                 if (err) {
                                     console.log(err);
-                                    interaction.editReply({embeds : [DiscordHelper.failureEmbed('Verification Failed', `There was an error when saving you to the database.`)], ephemeral : true});
+                                    interaction.editReply({embeds : [DiscordHelper.failureEmbed('Verification Failed', `There was an error when saving you to the database.`)], components: [], ephemeral : true});
                                     return;
                                 }
 
                                 interaction.member.roles.add( DiscordHelper.getRoleIdFromName(interaction.guild, 'Verified') )
                                 interaction.member.roles.remove( DiscordHelper.getRoleIdFromName(interaction.guild, 'Unverified') )
                                 interaction.member.setNickname(username)
-                                interaction.editReply({embeds : [DiscordHelper.successEmbed('Verification Success', `You have been verified with \`${username}\`.`)], ephemeral : true});
+                                interaction.editReply({embeds : [DiscordHelper.successEmbed('Verification Success', `You have been verified with \`${username}\`.`)], components: [], ephemeral : true});
                             })
                         } else {
                             interaction.editReply({embeds : [DiscordHelper.failureEmbed('Verification Failed', `Required message was not found in your Roblox about me.`)], components : [], ephemeral : true});
                             return;
                         }
                     }
-                })
+                }
+
+                const event = client.on('interactionCreate', buttonCallback)
+
+                // 10 minute timeout
+                setTimeout(() => {
+                    interaction.editReply({embeds : [DiscordHelper.failureEmbed('Verification Failed', `The request timed out.`)], ephemeral : true});
+                    event.off('interactionCreate', buttonCallback)
+                    return;
+                }, 1000*10*60)
             }
         })
     }

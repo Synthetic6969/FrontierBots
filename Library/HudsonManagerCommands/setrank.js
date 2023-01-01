@@ -55,10 +55,9 @@ module.exports = {
         let oldRankName = ''
         for (role of await RobloxHelper.getGroupRoles(process.env.HBC_GROUP_ID)) {
             if (role.rank == targetRank) oldRankName = role.name; 
-            if (role.rank < authorRank && role.rank < 45 && role.rank > 2 && role.rank != targetRank) {
+            if (role.rank < authorRank && role.rank < 45 && role.rank > 1 && role.rank != targetRank) {
                 options.push({
                     label: role.name,
-                    description: '',
                     value: role.name
                 })
             }
@@ -67,7 +66,7 @@ module.exports = {
         interaction.editReply({embeds: [ DiscordHelper.promptEmbed('Which rank would you like to give?', false) ], components: [
             new Discord.ActionRowBuilder()
                 .addComponents(
-                    new Discord.MessageSelectMenu()
+                    new Discord.StringSelectMenuBuilder()
                         .setCustomId(`SET_RANK_${targetUserId}${authorUserId}${key}`)
                         .setPlaceholder('Select a rank')
                         .setMinValues(1)
@@ -77,7 +76,7 @@ module.exports = {
         ], ephemeral: true})
 
         client.on('interactionCreate', async dropdownInteraction => {
-            if (!dropdownInteraction.isSelectMenu()) return;
+            if (!dropdownInteraction.isStringSelectMenu()) return;
 
             if (dropdownInteraction.customId == `SET_RANK_${targetUserId}${authorUserId}${key}`) {
                 const rank = dropdownInteraction.values[0]

@@ -13,6 +13,7 @@ class Database {
             console.log('Connected to database');
             this.connection = mongoose.connection;
         }).catch(err => {
+            console.log("Failed to connect to database.")
             console.error(err)
         });
     }

@@ -33,10 +33,10 @@ client.on('ready', async () => {
 
 client.on('guildMemberAdd', member => {
     member.roles.add([
-        '917009640653475911',
-        '917012117738127390',
-        '917010970960871474',
-        '810249114612531200'
+        '918682053657100340', // Unverified
+        '920797533868032091', // Buffer
+        '921540428782780486', // Buffer
+        '810249114612531200', // Settler
     ]);
 })
 
@@ -47,7 +47,7 @@ client.on('guildMemberRemove', async member => {
     const groupRank = await RobloxHelper.getRankInGroup(userId, process.env.HBC_GROUP_ID)
     if (groupRank > 1) {
         // Dishonourably discharge for desertion
-        member.guild.channels.cache.get('917074761304137749').send({embeds : [
+        member.guild.channels.cache.get('920693836903231489').send({embeds : [
             new Discord.EmbedBuilder()
                 .setTitle(`Dishonourable Discharge.`)
                 .setDescription(`[${await RobloxHelper.getUsernameFromUserId(userId)}](https://www.roblox.com/profile/${userId}) was dishonourably discharged for desertion.`)
