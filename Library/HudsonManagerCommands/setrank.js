@@ -75,10 +75,13 @@ module.exports = {
             )
         ], ephemeral: true})
 
-        client.on('interactionCreate', async dropdownInteraction => {
+        const dropdownCallback = async dropdownInteraction => {
             if (!dropdownInteraction.isStringSelectMenu()) return;
 
             if (dropdownInteraction.customId == `SET_RANK_${targetUserId}${authorUserId}${key}`) {
+                // Prevent memory leaks
+                client.off('interactionCreate', dropdownCallback)
+
                 const rank = dropdownInteraction.values[0]
                 
                 // Remove old roles
@@ -110,6 +113,15 @@ module.exports = {
                         .setTimestamp()
                 ]})
             }
-        })
+        }
+
+        client.on('interactionCreate', dropdownCallback)
+
+        // 10 minute timeout
+        setTimeout(() => {
+            interaction.editReply({embeds : [DiscordHelper.failureEmbed('Set Rank Failed', `The request timed out.`)], ephemeral : true});
+            client.off('interactionCreate', dropdownCallback)
+            return;
+        }, 1000*10*60)
     }
 }

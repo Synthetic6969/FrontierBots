@@ -23,6 +23,11 @@ const getUserIdFromDiscordId = async discordId => {
     return memberInfo?.roblox_id
 }
 
+const getDiscordIdFromUserId = async roblox_id => {
+    const memberInfo = await Member.findOne({ roblox_id: roblox_id })
+    return memberInfo?.discord_id
+}
+
 const getToken = async () => {
     let token
     try {
@@ -166,6 +171,7 @@ const getGroupRoles = async groupId => {
 module.exports = {
     getUserIdFromName,
     getUserIdFromDiscordId,
+    getDiscordIdFromUserId,
     getAsync,
     setAsync,
     getPlayerData,

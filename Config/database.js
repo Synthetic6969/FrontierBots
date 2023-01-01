@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+mongoose.set('strictQuery', false);
+
 class Database {
     constructor() {
         this.connection = null;

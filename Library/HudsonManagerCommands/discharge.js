@@ -51,41 +51,39 @@ module.exports = {
         // Check target
         const targetUserId = await RobloxHelper.getUserIdFromName(targetUsername);
         const targetRank = await RobloxHelper.getRankInGroup(targetUserId, process.env.HBC_GROUP_ID);
-        if (targetRank == 0) {
-            interaction.editReply({embeds : [DiscordHelper.failureEmbed('Discharge Failed', `User is not in the Roblox group.`)], ephemeral : true});
+        if (targetRank <= 1) {
+            interaction.editReply({embeds : [DiscordHelper.failureEmbed('Discharge Failed', `User is not a member of the company.`)], ephemeral : true});
             return;
         } if (targetRank >= authorRank) {
             interaction.editReply({embeds : [DiscordHelper.failureEmbed('Discharge Failed', `You are not permitted to rank people equal to or above your rank.`)], ephemeral : true});
             return;
         }
+        const targetMember = await DiscordHelper.getMemberFromRobloxUserId(targetUserId, interaction.guild)
 
-        // Discharge
-        if (dishonourable) {
-            interaction.guild.channels.cache.get('920693836903231489').send({embeds : [
-                new Discord.EmbedBuilder()
-                    .setTitle(`Dishonourable Discharge.`)
-                    .setDescription(`[${targetUsername}](https://www.roblox.com/profile/${targetUserId}) was dishonourably discharged.`)
-                    .addFields([
-                        {"name": "Reason Provided", "value": reason},
-                        {"name": "Discharging Officer", "value": `<@${interaction.member.id}>`}
-                    ])
-                    .setFooter({'text': `<@${interaction.member.id}>`})
-                    .setTimestamp()
-            ]})
-            RobloxHelper.setRank(targetUserId, process.env.HBC_GROUP_ID, 'Awaiting Placement')
-        } else {
-            interaction.guild.channels.cache.get('917074761304137749').send({embeds : [
-                new Discord.EmbedBuilder()
-                    .setTitle(`General Discharge.`)
-                    .setDescription(`[${targetUsername}](https://www.roblox.com/profile/${targetUserId}) was discharged.`)
-                    .addFields([
-                        {"name": "Reason Provided", "value": reason},
-                        {"name": "Discharging Officer", "value": `<@${interaction.member.id}>`}
-                    ])
-                    .setFooter({'text': `<@${interaction.member.id}>`})
-                    .setTimestamp()
-            ]})
-            RobloxHelper.setRank(targetUserId, process.env.HBC_GROUP_ID, 'Awaiting Placement')
+        // Discharge from ROBLOX
+        interaction.guild.channels.cache.get(dishonourable ? '920693836903231489' : '917074761304137749').send({embeds : [
+            new Discord.EmbedBuilder()
+                .setTitle(dishonourable ? `Dishonourable Discharge` : `General Discharge`)
+                .addFields([
+                    {"name": "Discharged Soldier", "value": `> **ROBLOX:** [${targetUsername}](https://www.roblox.com/profile/${targetUserId})\n> **Discord:** ${targetMember ? `<@${targetMember.user.id}>` : "Discord not found"}\n> **Company:** ${targetMember?.nickname ? `${targetMember.nickname.split(" ")[0].split(" ")[0].replace(/\[/g, '[ ').replace(/\]/g, ' ]')}` : "Could not find."}`},
+                    {"name": "Reason", "value": `> ${reason}`},
+                    {"name": "Discharging Officer", "value": `> <@${interaction.member.id}>`}
+                ])
+                .setFooter({'text': `Appeals may be made to the Judge Advocate Corps.`})
+                .setTimestamp()
+        ]})
+        RobloxHelper.setRank(targetUserId, process.env.HBC_GROUP_ID, 'Awaiting Placement')
+
+        // Discharge from Discord
+        if (targetMember) {
+            targetMember.setNickname(null)
+            await targetMember.roles.remove(targetMember._roles)
+            targetMember.roles.add([
+                '918682053657100340', // Unverified
+                '920797533868032091', // Buffer
+                '921540428782780486', // Buffer
+                '810249114612531200', // Settler
+            ]);
         }
 
         interaction.editReply({embeds : [DiscordHelper.successEmbed('Discharge Success', `${targetUsername} has been discharged. If this was a mistake, correct it immediately or there will be very serious repercussions.`)], ephemeral : true});

@@ -62,6 +62,10 @@ const getMemberFromMention = async (msg) => {
 	return (await msg.guild.members.fetch()).get(matches[0].replace('<@!', '').replace('>', ''));
 }
 
+const getMemberFromRobloxUserId = async (userId, guild) => {
+    return (await guild.members.cache.get(await RobloxHelper.getDiscordIdFromUserId(userId)))
+}
+
 const authenticate = async (userId, permissionLevel) => {
     if (permissionLevel == 'All') return true;
     const groupRank = await RobloxHelper.getRankInGroup(userId, process.env.COMMUNITY_GROUP_ID);
@@ -82,4 +86,4 @@ const getRoleIdFromName = ((guild, name) => {
     return id;
 })
 
-module.exports = { loadingEmbed, failureEmbed, successEmbed, promptEmbed, logCommand, getMemberFromMention, authenticate, getRoleIdFromName };
+module.exports = { loadingEmbed, failureEmbed, successEmbed, promptEmbed, logCommand, getMemberFromMention, authenticate, getRoleIdFromName, getMemberFromRobloxUserId };

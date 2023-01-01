@@ -78,7 +78,7 @@ module.exports = {
 
                     if (buttonInteraction.customId == `VERIFY_${userId}`) {
                         // Prevent memory leaks
-                        event.off('interactionCreate', buttonCallback)
+                        client.off('interactionCreate', buttonCallback)
 
                         // Check status
                         buttonInteraction.deferUpdate()
@@ -109,12 +109,12 @@ module.exports = {
                     }
                 }
 
-                const event = client.on('interactionCreate', buttonCallback)
+                client.on('interactionCreate', buttonCallback)
 
                 // 10 minute timeout
                 setTimeout(() => {
                     interaction.editReply({embeds : [DiscordHelper.failureEmbed('Verification Failed', `The request timed out.`)], ephemeral : true});
-                    event.off('interactionCreate', buttonCallback)
+                    client.off('interactionCreate', buttonCallback)
                     return;
                 }, 1000*10*60)
             }

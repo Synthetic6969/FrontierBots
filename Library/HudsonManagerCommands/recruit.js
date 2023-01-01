@@ -69,7 +69,19 @@ module.exports = {
         }
 
         if (matches.length == 1) {
-            setTroop(garrisons.recruitment[matches[0]])
+            setTroop(garrisons.recruitment[matches[0]][0])
+
+            // Reply
+            dropdownInteraction.deferUpdate()
+            interaction.editReply({'embeds' : [ DiscordHelper.successEmbed('Success', `Successfully recruited ${targetMember} into ${garrison}`) ], components : [], ephemeral : true})
+            // Log command
+            interaction.guild.channels.cache.get('917175272481095790').send({embeds : [
+                new Discord.EmbedBuilder()
+                    .setTitle(`${targetUsername} was recruited into ${garrison}`)
+                    .setDescription(`[${targetUsername}](https://www.roblox.com/profile/${targetUserId}) was recruited into ${garrison} by [${authorUsername}](https://www.roblox.com/profile/${authorUserId})`)
+                    .setFooter({"text": authorUsername})
+                    .setTimestamp()
+            ]})
         } else {
             let options = []
             for (match of matches) {
