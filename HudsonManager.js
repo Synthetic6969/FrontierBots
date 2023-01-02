@@ -58,6 +58,14 @@ client.on('guildMemberRemove', async member => {
     }
 })
 
+client.on('messageCreate', async message => {
+    if (message.author.id == message.guild.ownerId || message.author.bot) return;
+
+    if (message.channel.name == "verification") {
+        try { message.delete() } catch { err => console.log(err) }
+    }
+})
+
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand) return;
     

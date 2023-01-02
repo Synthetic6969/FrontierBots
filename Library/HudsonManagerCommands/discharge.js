@@ -79,7 +79,7 @@ module.exports = {
             targetMember.setNickname(null)
             await targetMember.roles.remove(targetMember._roles)
             targetMember.roles.add([
-                '918682053657100340', // Unverified
+                '811566439479640135', // Verified
                 '920797533868032091', // Buffer
                 '921540428782780486', // Buffer
                 '810249114612531200', // Settler

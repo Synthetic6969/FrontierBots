@@ -39,7 +39,7 @@ module.exports = {
 
             // Already verified on this account
             if (memberInfo) {
-                interaction.member.roles.add( DiscordHelper.getRoleIdFromName(interaction.guild, 'Verified') )
+                await interaction.member.roles.add( DiscordHelper.getRoleIdFromName(interaction.guild, 'Verified') )
                 interaction.member.roles.remove( DiscordHelper.getRoleIdFromName(interaction.guild, 'Unverified') )
                 interaction.editReply({embeds : [DiscordHelper.successEmbed('Verification Success', `You are already verified with \`${await RobloxHelper.getUsernameFromUserId(memberInfo.roblox_id)}\`.`)], ephemeral : true});
                 return;

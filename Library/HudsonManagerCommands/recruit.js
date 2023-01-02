@@ -62,8 +62,8 @@ module.exports = {
         const setTroop = async troopInfo => {
             targetMember.setNickname(`${troopInfo.name.replace(/ /g, '')} ${targetUsername}`)
             troopInfo.roles.push('1059126226847023115') // Add frontiersman role
-            targetMember.roles.add(troopInfo.roles)
-            targetMember.roles.remove('810249114612531200') // Remove Awaiting Placement
+            await targetMember.roles.add(troopInfo.roles)
+            targetMember.roles.remove(['810249114612531200']) // Remove Awaiting Placement
             RobloxHelper.setRank(targetUserId, process.env.HBC_GROUP_ID, 'Frontiersman')
             garrison = troopInfo.name
         }

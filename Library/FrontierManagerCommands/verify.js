@@ -39,7 +39,7 @@ module.exports = {
 
             // Already verified on this account
             if (memberInfo) {
-                interaction.member.roles.add( DiscordHelper.getRoleIdFromName(interaction.guild, 'Verified') )
+                await interaction.member.roles.add( DiscordHelper.getRoleIdFromName(interaction.guild, 'Verified') )
                 interaction.member.roles.remove( DiscordHelper.getRoleIdFromName(interaction.guild, 'Unverified') )
                 interaction.editReply({embeds : [DiscordHelper.successEmbed('Verification Success', `You are already verified with \`${await RobloxHelper.getUsernameFromUserId(memberInfo.roblox_id)}\`.`)], ephemeral : true});
                 return;
@@ -78,7 +78,7 @@ module.exports = {
 
                     if (buttonInteraction.customId == `VERIFY_${userId}`) {
                         // Prevent memory leaks
-                        event.off('interactionCreate', buttonCallback)
+                        client.off('interactionCreate', buttonCallback)
 
                         // Check status
                         buttonInteraction.deferUpdate()
@@ -109,12 +109,12 @@ module.exports = {
                     }
                 }
 
-                const event = client.on('interactionCreate', buttonCallback)
+                client.on('interactionCreate', buttonCallback)
 
                 // 10 minute timeout
                 setTimeout(() => {
                     interaction.editReply({embeds : [DiscordHelper.failureEmbed('Verification Failed', `The request timed out.`)], ephemeral : true});
-                    event.off('interactionCreate', buttonCallback)
+                    client.off('interactionCreate', buttonCallback)
                     return;
                 }, 1000*10*60)
             }
