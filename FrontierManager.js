@@ -1,6 +1,6 @@
 require('dotenv').config();
 const Discord = require('discord.js');
-const client = new Discord.Client({
+const CommunityClient = new Discord.Client({
     intents : 32767,
     presence : {
         'activities' : [{
@@ -13,25 +13,17 @@ const client = new Discord.Client({
 });
 const DiscordHelper = require('./Library/DiscordHelper.js');
 const RobloxHelper = require('./Library/RobloxHelper.js');
-const cmds = require('./Library/FrontierManagerCommands/commands');
+const CommunityCommands = require('./Library/FrontierManagerCommands/commands');
 
 const roleReactionSetup = async () => {
     const msgId = "817110322681872434";
-    const guild = client.guilds.cache.get('805853313643577344');
-    const message = client.channels.cache.get('817105824224641097').messages.fetch(msgId);
 
     // Roles
-    const colonist = '817103889374904380';
-    const native = '817104033524219904';
-    const hbc = '817104057780011058';
+    const colonist  = '817103889374904380';
+    const native    = '817104033524219904';
+    const hbc       = '817104057780011058';
 
-    const removeOldRoles = async (reaction, user) => {
-        await guild.members.cache.get(user.id).roles.remove(colonist);
-        await guild.members.cache.get(user.id).roles.remove(native);
-        await guild.members.cache.get(user.id).roles.remove(hbc);
-    }
-
-    client.on('messageReactionAdd', async (reaction, user) => {
+    CommunityClient.on('messageReactionAdd', async (reaction, user) => {
         if (user.bot || !reaction.message.guild) return;
 
         if (reaction.message.id == msgId) {
@@ -40,7 +32,7 @@ const roleReactionSetup = async () => {
                 member.roles.add(colonist);
             } else if (reaction.emoji.name === '🦅') {
                 member.roles.add(native);
-            } else if (reaction.emoji.id == '817118890483253329') {
+            } else if (reaction.emoji.id == '817118890483253329' || DiscordHelper.isVerified(member)) {
                 const userId = await RobloxHelper.getUserIdFromDiscordId(user.id)
                 const groupRank = await RobloxHelper.getRankInGroup(userId, process.env.HBC_GROUP_ID)
                 if (groupRank > 1) {
@@ -50,31 +42,31 @@ const roleReactionSetup = async () => {
         }
     });
 
-    client.on('messageReactionRemove', async (reaction, user) => {
+    CommunityClient.on('messageReactionRemove', async (reaction, user) => {
         if (user.bot || !reaction.message.guild) return;
-        if (reaction.message.id == msgId) removeOldRoles(reaction, user)
+        if (reaction.message.id == msgId) reaction.guild.members.cache.get(user.id).roles.remove([ colonist, native, hbc ]);
     });
 }
 
 // Client Events
-client.on('ready', async () => {
-    console.log(`Logged in as ${client.user.tag}`);
+CommunityClient.on('ready', async () => {
+    console.log(`Logged in as ${CommunityClient.user.tag}`);
     roleReactionSetup()
 
-    const guild = client.guilds.cache.get('805853313643577344');
+    const guild = CommunityClient.guilds.cache.get('805853313643577344');
     let commands = guild.commands
 
-    for (const cmd in cmds) {
-        commands?.create(cmds[cmd].info)
+    for (const cmd in CommunityCommands) {
+        commands?.create(CommunityCommands[cmd].info)
     }
 });
 
-client.on('interactionCreate', async interaction => {
+CommunityClient.on('interactionCreate', async interaction => {
     if (!interaction.isCommand) return;
     
-    if (cmds[interaction.commandName]) {
-        cmds[interaction.commandName].run(interaction)
+    if (CommunityCommands[interaction.commandName]) {
+        CommunityCommands[interaction.commandName].run(interaction)
     }
 })
 
-client.login(process.env.COMMUNITY_MANAGER_TOKEN);
+CommunityClient.login(process.env.COMMUNITY_MANAGER_TOKEN);

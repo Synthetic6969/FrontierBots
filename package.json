@@ -11,7 +11,9 @@
   "version": "1.0.0",
   "main": "HudsonManager.js",
   "scripts": {
-    "dev": "nodemon HudsonManager.js"
+    "dev": "nodemon App.js",
+    "hudson": "nodemon HudsonManager.js",
+    "community": "nodemon FrontierManager.js"
   },
   "repository": {
     "type": "git",

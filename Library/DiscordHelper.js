@@ -51,9 +51,13 @@ const logCommand = async (guild, cmd, cmdType, authorUsername, args, reason, fil
         .setColor(colour)
         .setTitle(`${cmd} was used`)
         .addFields(fields)
-        .setFooter(authorUsername)
+        .setFooter({"text": authorUsername})
         .setTimestamp()
     ], files : file == undefined ? [] : [file]})
+}
+
+const isVerified = async (member) => {
+    return member.roles.cache.has( getRoleIdFromName(member.guild, 'Verified') )
 }
 
 const getMemberFromMention = async (msg) => {
@@ -86,4 +90,4 @@ const getRoleIdFromName = ((guild, name) => {
     return id;
 })
 
-module.exports = { loadingEmbed, failureEmbed, successEmbed, promptEmbed, logCommand, getMemberFromMention, authenticate, getRoleIdFromName, getMemberFromRobloxUserId };
+module.exports = { loadingEmbed, failureEmbed, successEmbed, promptEmbed, logCommand, getMemberFromMention, authenticate, getRoleIdFromName, getMemberFromRobloxUserId, isVerified };

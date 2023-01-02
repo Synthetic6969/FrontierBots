@@ -39,8 +39,9 @@ module.exports = {
 
             // Already verified on this account
             if (memberInfo) {
-                await interaction.member.roles.add( DiscordHelper.getRoleIdFromName(interaction.guild, 'Verified') )
-                interaction.member.roles.remove( DiscordHelper.getRoleIdFromName(interaction.guild, 'Unverified') )
+                await interaction.member.roles.add([ DiscordHelper.getRoleIdFromName(interaction.guild, 'Verified') ])
+                await interaction.member.roles.remove([ DiscordHelper.getRoleIdFromName(interaction.guild, 'Unverified') ])
+                interaction.member.setNickname(username)
                 interaction.editReply({embeds : [DiscordHelper.successEmbed('Verification Success', `You are already verified with \`${await RobloxHelper.getUsernameFromUserId(memberInfo.roblox_id)}\`.`)], ephemeral : true});
                 return;
             }
@@ -90,15 +91,15 @@ module.exports = {
                                 roblox_id: userId,
                             });
 
-                            MemberInfo.save(err => {
+                            MemberInfo.save(async err => {
                                 if (err) {
                                     console.log(err);
                                     interaction.editReply({embeds : [DiscordHelper.failureEmbed('Verification Failed', `There was an error when saving you to the database.`)], components: [], ephemeral : true});
                                     return;
                                 }
 
-                                interaction.member.roles.add( DiscordHelper.getRoleIdFromName(interaction.guild, 'Verified') )
-                                interaction.member.roles.remove( DiscordHelper.getRoleIdFromName(interaction.guild, 'Unverified') )
+                                await interaction.member.roles.add([ DiscordHelper.getRoleIdFromName(interaction.guild, 'Verified') ])
+                                await interaction.member.roles.remove([ DiscordHelper.getRoleIdFromName(interaction.guild, 'Unverified') ])
                                 interaction.member.setNickname(username)
                                 interaction.editReply({embeds : [DiscordHelper.successEmbed('Verification Success', `You have been verified with \`${username}\`.`)], components: [], ephemeral : true});
                             })

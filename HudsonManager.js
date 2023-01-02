@@ -3,11 +3,11 @@ const Database = require('./Config/database');
 const Discord = require('discord.js');
 const DiscordHelper = require('./Library/DiscordHelper.js');
 const RobloxHelper = require('./Library/RobloxHelper.js');
-const cmds = require('./Library/HudsonManagerCommands/commands');
+const CompanyCommands = require('./Library/HudsonManagerCommands/commands');
 
 const db = new Database();
 db.connect();
-const client = new Discord.Client({
+const CompanyClient = new Discord.Client({
     intents : 32767,
     presence : {
         'activities' : [{
@@ -20,18 +20,18 @@ const client = new Discord.Client({
 });
 
 // Client Events
-client.on('ready', async () => {
-    console.log(`Logged in as ${client.user.tag}`);
+CompanyClient.on('ready', async () => {
+    console.log(`Logged in as ${CompanyClient.user.tag}`);
 
-    const guild = client.guilds.cache.get('809854975446351942');
+    const guild = CompanyClient.guilds.cache.get('809854975446351942');
     let commands = guild.commands
 
-    for (const cmd in cmds) {
-        commands?.create(cmds[cmd].info)
+    for (const cmd in CompanyCommands) {
+        commands?.create(CompanyCommands[cmd].info)
     }
 });
 
-client.on('guildMemberAdd', member => {
+CompanyClient.on('guildMemberAdd', member => {
     member.roles.add([
         '918682053657100340', // Unverified
         '920797533868032091', // Buffer
@@ -40,7 +40,7 @@ client.on('guildMemberAdd', member => {
     ]);
 })
 
-client.on('guildMemberRemove', async member => {
+CompanyClient.on('guildMemberRemove', async member => {
     // Check rank in group
     const userId = await RobloxHelper.getUserIdFromDiscordId(member.id)
     if (!userId) return;
@@ -58,7 +58,7 @@ client.on('guildMemberRemove', async member => {
     }
 })
 
-client.on('messageCreate', async message => {
+CompanyClient.on('messageCreate', async message => {
     if (message.author.id == message.guild.ownerId || message.author.bot) return;
 
     if (message.channel.name == "verification") {
@@ -66,12 +66,12 @@ client.on('messageCreate', async message => {
     }
 })
 
-client.on('interactionCreate', async interaction => {
+CompanyClient.on('interactionCreate', async interaction => {
     if (!interaction.isCommand) return;
     
-    if (cmds[interaction.commandName]) {
+    if (CompanyCommands[interaction.commandName]) {
         try {
-            cmds[interaction.commandName].run(interaction, client)
+            CompanyCommands[interaction.commandName].run(interaction, CompanyClient)
         } catch (err) {
             console.log(err)
             interaction.deferReply('There was a server error with your request. Please try again, or report this issue to Synthetic.')
@@ -79,4 +79,4 @@ client.on('interactionCreate', async interaction => {
     }
 })
 
-client.login(process.env.HUDSON_MANAGER_TOKEN);
+CompanyClient.login(process.env.HUDSON_MANAGER_TOKEN);
