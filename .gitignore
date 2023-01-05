@@ -5,3 +5,4 @@ FrontierManager.js
 HudsonManager.js
 *.todo
 *.env
+*.vscode
