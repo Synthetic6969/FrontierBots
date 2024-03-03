@@ -4,17 +4,18 @@ const Member = require('../Models/Member.js');
 
 const getUserIdFromName = async name => {
     const response = (await axios.request({
-        method: 'GET',
-        url: `https://api.roblox.com/users/get-by-username?username=${name}`
-    })).data.Id || false
+        method: 'POST',
+        url: `https://users.roblox.com/v1/usernames/users`,
+        data: { "usernames": [ name ], "excludeBannedUsers": true }
+    })).data?.data[0]?.name || false
     return response
 }
 
 const getUsernameFromUserId = async userId => {
     const response = (await axios.request({
         method: 'GET',
-        url: `https://api.roblox.com/users/${userId}`
-    })).data.Username || false
+        url: `https://users.roblox.com/v1/users/${userId}`
+    })).data?.name || false
     return response
 }
 

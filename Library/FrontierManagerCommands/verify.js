@@ -57,7 +57,7 @@ module.exports = {
 
                 interaction.editReply({description: statusMessage, embeds: [
                     new Discord.EmbedBuilder()
-                        .setColor("BLUE")
+                        .setColor(Discord.Colors.Blue)
                         .setTitle('Verifying')
                         .setDescription(`Please set your Roblox about me to: \`${statusMessage}\` and click \`Done\` when complete.\n\n*If you don't know how to do this, check the image below.*`)
                         .setImage('https://cdn.discordapp.com/attachments/674333302978773002/919220047128432681/unknown.png')

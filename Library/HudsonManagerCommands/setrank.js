@@ -128,7 +128,7 @@ module.exports = {
                                     "value": `> **ROBLOX:** [${authorUsername}](https://www.roblox.com/profile/${authorUserId})\n > **Discord:** <@${interaction.member.id}>`
                                 },
                             ])
-                            .setColor(isPromotion ? "Green" : "Red")
+                            .setColor(isPromotion ? Discord.Colors.Green : Discord.Colors.Red)
                             .setFooter({"text": authorUsername})
                             .setTimestamp()
                     ]})

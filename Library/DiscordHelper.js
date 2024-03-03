@@ -4,7 +4,7 @@ const RobloxHelper = require('./RobloxHelper');
 
 const promptEmbed = (description, includeQuestionMark) => {
     return new Discord.EmbedBuilder()
-        .setColor("Blue")
+        .setColor(Discord.Colors.Blue)
         .setTitle("Prompt")
         .setDescription((includeQuestionMark ? "❓ " : "") + description)
         .setFooter({"text": "This prompt will cancel after 200 seconds."})
@@ -13,7 +13,7 @@ const promptEmbed = (description, includeQuestionMark) => {
 
 const successEmbed = (title, description) => {
     return new Discord.EmbedBuilder()
-        .setColor("Green")
+        .setColor(Discord.Colors.Green)
         .setTitle(title)
         .setDescription(`✅ ${description}`)
         .setTimestamp()
@@ -21,7 +21,7 @@ const successEmbed = (title, description) => {
 
 const failureEmbed = (title, description) => {
     return new Discord.EmbedBuilder()
-        .setColor("Red")
+        .setColor(Discord.Colors.Red)
         .setTitle(title)
         .setDescription(`❌ ${description}`)
         .setTimestamp()
@@ -29,7 +29,7 @@ const failureEmbed = (title, description) => {
 
 const loadingEmbed = (title, description) => {
     return new Discord.EmbedBuilder()
-        .setColor("Grey")
+        .setColor(Discord.Colors.Grey)
         .setTitle(title)
         .setDescription(`🦧 ${description}`)
         .setTimestamp()
@@ -42,10 +42,10 @@ const logCommand = async (guild, cmd, cmdType, authorUsername, args, reason, fil
     }
     fields.push({ 'name' : 'Reason', 'value' : `> ${reason}`})
     const colour = {
-        Utility : 'Grey',
-        Reimbursement : 'Green',
-        Moderation : 'Yellow',
-        Administration : 'Red'
+        Utility : Discord.Colors.Grey,
+        Reimbursement : Discord.Colors.Green,
+        Moderation : Discord.Colors.Yellow,
+        Administration : Discord.Colors.Red
     }[cmdType]
     await (await guild.channels.cache.get('914515512568983563')).send({embeds : [new Discord.EmbedBuilder()
         .setColor(colour)
